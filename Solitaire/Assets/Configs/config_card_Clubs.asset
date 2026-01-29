@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e2a922c9744d20bb1fa96e2c9c1582, type: 3}
+  m_Name: config_card_Clubs
+  m_EditorClassIdentifier: Assembly-CSharp::Solitaire.Cards.CardTypeConfig
+  <Symbol>k__BackingField: 2
+  <Color>k__BackingField: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  <LargeSprite>k__BackingField: {fileID: 2852610726315664299, guid: 2d349fac04a49fb4a911a3436b839360, type: 3}
+  <SmallSprite>k__BackingField: {fileID: -698981674543251260, guid: 7c7a0ab38709b4c428733f1e0804ba83, type: 3}
