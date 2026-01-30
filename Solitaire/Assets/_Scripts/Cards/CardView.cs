@@ -7,18 +7,20 @@ namespace Solitaire.Cards
     {
         [SerializeField] private CardData m_Data;
         [SerializeField] private SpriteRenderer m_SymbolRenderer;
-        [SerializeField] private SpriteRenderer m_UpCornerRenderer;
-        [SerializeField] private SpriteRenderer m_DownCornerRenderer;
+        [SerializeField] private SpriteRenderer m_UpIconRenderer;
+        [SerializeField] private SpriteRenderer m_DownIconRenderer;
         [SerializeField] private TMP_Text m_UpLetter;
         [SerializeField] private TMP_Text m_DownLetter;
 
         public CardData Data => m_Data;
 
-        public void Init(string letter, CardConfig config)
+        public void InitData(CardData data) => m_Data = data;
+
+        public void Configure(CardConfig config)
         {
-            m_Data = new CardData(letter, config.Symbol);
-            SetLetter(letter);
-            SetSymbolSprite(config.LargeSprite);
+            SetLetter(m_Data.Letter);
+            SetSymbolSprite(config.SymbolSprite);
+            SetIconSprite(config.IconSprite);
             SetColor(config.Color);
         }
 
@@ -31,15 +33,19 @@ namespace Solitaire.Cards
         private void SetSymbolSprite(Sprite symbol)
         {
             m_SymbolRenderer.sprite = symbol;
-            m_UpCornerRenderer.sprite = symbol;
-            m_DownCornerRenderer.sprite = symbol;
+        }
+
+        private void SetIconSprite(Sprite icon)
+        {
+            m_UpIconRenderer.sprite = icon;
+            m_DownIconRenderer.sprite = icon;
         }
 
         private void SetColor(Color color)
         {
             m_SymbolRenderer.color = color;
-            m_UpCornerRenderer.color = color;
-            m_DownCornerRenderer.color = color;
+            m_UpIconRenderer.color = color;
+            m_DownIconRenderer.color = color;
             m_UpLetter.color = color;
             m_DownLetter.color = color;
         }

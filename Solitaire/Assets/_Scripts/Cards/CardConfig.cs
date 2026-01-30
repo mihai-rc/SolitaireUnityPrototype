@@ -13,9 +13,9 @@ namespace Solitaire.Cards
         public Color Color { get; private set; }
 
         [field: SerializeField]
-        public Sprite LargeSprite { get; private set; }
+        public Sprite SymbolSprite { get; private set; }
 
         [field: SerializeField]
-        public Sprite SmallSprite { get; private set; }
+        public Sprite IconSprite { get; private set; }
     }
 }

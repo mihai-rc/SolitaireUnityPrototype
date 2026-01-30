@@ -6,10 +6,10 @@
 
         public CardData CardData => m_CardView.Data;
 
-        public CardController(string letter, CardConfig config, CardView cardView)
+        public CardController(CardView cardView, CardConfig config)
         {
             m_CardView = cardView;
-            m_CardView.Init(letter, config);
+            m_CardView.Configure(config);
         }
     }
 }
