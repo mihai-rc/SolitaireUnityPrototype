@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 975059866963263768}
   - component: {fileID: 1636914589661731779}
+  - component: {fileID: 3813722445975928280}
   m_Layer: 0
   m_Name: prefab_CardZone
   m_TagString: Untagged
@@ -91,3 +92,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &3813722445975928280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963437130448908288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9bf3173cdcc4c9b92805a5cf82b7576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Solitaire.CardsStack
+  m_Capacity: 52
+  m_Spacing: 0.01
+  m_CardViews: []

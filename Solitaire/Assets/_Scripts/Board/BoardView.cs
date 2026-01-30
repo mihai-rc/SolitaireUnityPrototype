@@ -27,23 +27,25 @@ namespace Solitaire.Board
 
         [Header("Editor Config"), Space(10)]
         [SerializeField] private Grid m_Grid;
-        [SerializeField] private GameObject m_CardZonePrefab;
+        [SerializeField] private CardsStack m_CardsStackPrefab;
 
         [Header("View Config"), Space(10)]
         [SerializeField] private Transform m_DeckHolder;
         [SerializeField] private Transform m_CollectorsHolder;
         [SerializeField] private Transform m_StacksHolder;
-        [SerializeField] private List<Transform> m_Collectors;
-        [SerializeField] private List<Transform> m_Stacks;
+        [SerializeField] private CardsStack m_DeckStack;
+        [SerializeField] private List<CardsStack> m_Collectors;
+        [SerializeField] private List<CardsStack> m_Stacks;
 
         private void ArrangeBoard()
         {
-            CreateStacks();
-            CreateCollectors();
+            CreateRearrangeableStacks();
+            CreateCollectorsStacks();
+            CreateDeckStack();
             FrameView();
         }
 
-        private void CreateStacks()
+        private void CreateRearrangeableStacks()
         {
             foreach (var stack in m_Stacks)
             {
@@ -53,11 +55,12 @@ namespace Solitaire.Board
             m_Stacks.Clear();
             for (var i = 0; i < k_StacksCount; i++)
             {
-                CreateZone(i, 0, m_StacksHolder, m_Stacks);
+                var stack = CreateStack(i, 0, m_StacksHolder);
+                m_Stacks.Add(stack);
             }
         }
 
-        private void CreateCollectors()
+        private void CreateCollectorsStacks()
         {
             foreach (var collector in m_Collectors)
             {
@@ -67,25 +70,37 @@ namespace Solitaire.Board
             m_Collectors.Clear();
             for (var i = 0; i < k_CollectorsCount; i++)
             {
-                CreateZone(i, 1, m_CollectorsHolder, m_Collectors);
+                var stack = CreateStack(i, 1, m_CollectorsHolder);
+                m_Collectors.Add(stack);
             }
         }
 
-        private void CreateZone(int x, int y, Transform parent, List<Transform> cache)
+        private void CreateDeckStack()
+        {
+            if (m_DeckStack != null)
+            {
+                DestroyImmediate(m_DeckStack.gameObject);
+            }
+
+            m_DeckStack = CreateStack(k_StacksCount - 1, 1, m_DeckHolder);
+        }
+
+        private CardsStack CreateStack(int x, int y, Transform parent)
         {
             var position = m_Grid.GetCellCenterLocal(new Vector3Int(x, y, 0));
-            var zone = Instantiate(m_CardZonePrefab, parent);
-            zone.transform.localPosition = new Vector3(position.x, position.y, 0f);
-            cache.Add(zone.transform);
+            var stack = Instantiate(m_CardsStackPrefab, parent);
+            stack.transform.localPosition = new Vector3(position.x, position.y, 0f);
+
+            return stack;
         }
 
         private void FrameView()
         {
             transform.position = Vector3.zero;
 
-            var firstStack = m_Stacks.First();
-            var lastStack = m_Stacks.Last();
-            var offsets = firstStack.position.x + (lastStack.position.x - firstStack.position.x) / 2;
+            var firstStackPosition = m_Stacks.First().transform.position;
+            var lastStackPosition = m_Stacks.Last().transform.position;
+            var offsets = firstStackPosition.x + (lastStackPosition.x - firstStackPosition.x) / 2;
             transform.position = new Vector3(-offsets, 0f, 0);
         }
     }
