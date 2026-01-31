@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using Solitaire.Cards;
 
-namespace Solitaire.Cards
+using UnityEditor;
+
+namespace Solitaire.Deck
 {
     public class CardsDeckView : MonoBehaviour
     {
@@ -68,14 +70,6 @@ namespace Solitaire.Cards
                 12 => "K",
                 _  => (rank + 1).ToString()
             };
-        }
-
-        private CardView InstantiateCardView()
-        {
-            var cardView = Instantiate(m_CardPrefab, transform);
-            cardView.transform.localPosition = Vector3.zero;
-
-            return cardView;
         }
     }
 }

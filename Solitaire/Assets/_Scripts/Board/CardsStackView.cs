@@ -2,9 +2,9 @@
 using Solitaire.Cards;
 using UnityEngine;
 
-namespace Solitaire
+namespace Solitaire.Board
 {
-    public class CardsStack : MonoBehaviour
+    public class CardsStackView : MonoBehaviour
     {
         [SerializeField] private int m_Capacity;
         [SerializeField] private float m_Spacing;

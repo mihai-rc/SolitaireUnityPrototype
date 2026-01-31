@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Solitaire.Cards;
+using Solitaire.Deck;
 
 namespace Solitaire
 {
@@ -7,9 +7,16 @@ namespace Solitaire
     {
         [SerializeField] private CardsDeckView m_CardsDeckView;
 
+        private CardsDeckController m_CardsDeckController;
+
         private void Start()
         {
-            new CardsDeckController(m_CardsDeckView);
+            m_CardsDeckController = new CardsDeckController(m_CardsDeckView);
+        }
+
+        private void OnDestroy()
+        {
+            m_CardsDeckController.Dispose();
         }
     }
 }
