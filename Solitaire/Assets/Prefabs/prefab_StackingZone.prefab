@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1636914589661731779}
   - component: {fileID: 3813722445975928280}
   m_Layer: 0
-  m_Name: prefab_CardZone
+  m_Name: prefab_StackingZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,6 +104,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9bf3173cdcc4c9b92805a5cf82b7576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Solitaire.CardsStack
-  m_Capacity: 52
-  m_Spacing: 0.01
-  m_CardViews: []
+  m_Spacing: {x: 0, y: -0.2, z: -0.01}

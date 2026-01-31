@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine.Pool;
 using Solitaire.Cards;
 
@@ -8,56 +9,52 @@ namespace Solitaire.Deck
     public class CardsDeckController : IDisposable
     {
         private readonly CardsDeckView m_View;
-        private readonly List<StackableCard> m_StackableCards;
+        private readonly List<CardView> m_Cards;
 
         public CardsDeckController(CardsDeckView view)
         {
             m_View = view;
-            m_StackableCards = ListPool<StackableCard>.Get();
+            m_Cards = ListPool<CardView>.Get();
 
             InitCardsStack();
         }
 
-        public StackableCard Shuffle()
+        public void Shuffle()
         {
-            for (var i = 0; i < m_StackableCards.Count; i++)
+            for (var i = 0; i < m_Cards.Count; i++)
             {
-                var randomIndex = UnityEngine.Random.Range(0, m_StackableCards.Count);
-                (m_StackableCards[i], m_StackableCards[randomIndex]) = (m_StackableCards[randomIndex], m_StackableCards[i]);
+                var randomIndex = UnityEngine.Random.Range(0, m_Cards.Count);
+                (m_Cards[i], m_Cards[randomIndex]) = (m_Cards[randomIndex], m_Cards[i]);
             }
 
-            StackableCard previous = null;
-            foreach (var card in m_StackableCards)
-            {
-                if (previous != null)
-                {
-                    card.TryAdd(previous);
-                }
-
-                previous = card;
-            }
-
-            return previous;
+            // StackableCard previous = null;
+            // foreach (var card in m_StackableCards)
+            // {
+            //     if (previous != null)
+            //     {
+            //         card.TryAdd(previous);
+            //     }
+            //
+            //     previous = card;
+            // }
+            //
+            // return previous;
         }
 
-        public void ForEach(Action<StackableCard> iteratorFn)
+        public async ValueTask ForEachAsync<T>(T context, Func<T, CardView, ValueTask> iteratorFn)
         {
-            // var card = m_FirstCard;
-            // while (card != null)
-            // {
-            //     iteratorFn?.Invoke(card);
-            //     card = card.Next;
-            // }
-
-            foreach (var card in m_StackableCards)
+            foreach (var card in m_Cards)
             {
-                iteratorFn?.Invoke(card);
+                if (iteratorFn != null)
+                {
+                    await iteratorFn(context, card);
+                }
             }
         }
 
         public void Dispose()
         {
-            ListPool<StackableCard>.Release(m_StackableCards);
+            ListPool<CardView>.Release(m_Cards);
         }
 
         private void InitCardsStack()
@@ -73,9 +70,7 @@ namespace Solitaire.Deck
             {
                 var cardConfig = configsMap[cardView.Data.Symbol];
                 cardView.Configure(cardConfig);
-
-                var current = new StackableCard(cardView);
-                m_StackableCards.Add(current);
+                m_Cards.Add(cardView);
             }
 
             DictionaryPool<Symbols, CardConfig>.Release(configsMap);

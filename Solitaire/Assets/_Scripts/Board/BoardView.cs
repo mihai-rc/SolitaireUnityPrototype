@@ -27,15 +27,21 @@ namespace Solitaire.Board
 
         [Header("Editor Config"), Space(10)]
         [SerializeField] private Grid m_Grid;
-        [SerializeField] private CardsStackView m_CardsStackPrefab;
+        [SerializeField] private StackingZone m_CardsStackPrefab;
 
         [Header("View Config"), Space(10)]
         [SerializeField] private Transform m_DeckHolder;
         [SerializeField] private Transform m_CollectorsHolder;
         [SerializeField] private Transform m_StacksHolder;
-        [SerializeField] private CardsStackView m_DeckStack;
-        [SerializeField] private List<CardsStackView> m_Collectors;
-        [SerializeField] private List<CardsStackView> m_Stacks;
+        [SerializeField] private StackingZone m_DeckStack;
+        [SerializeField] private List<StackingZone> m_Collectors;
+        [SerializeField] private List<StackingZone> m_Stacks;
+
+        public StackingZone DeckStack => m_DeckStack;
+
+        public List<StackingZone> Collectors => m_Collectors;
+
+        public List<StackingZone> Stacks => m_Stacks;
 
         private void ArrangeBoard()
         {
@@ -85,7 +91,7 @@ namespace Solitaire.Board
             m_DeckStack = CreateStack(k_StacksCount - 1, 1, m_DeckHolder);
         }
 
-        private CardsStackView CreateStack(int x, int y, Transform parent)
+        private StackingZone CreateStack(int x, int y, Transform parent)
         {
             var position = m_Grid.GetCellCenterLocal(new Vector3Int(x, y, 0));
             var stack = Instantiate(m_CardsStackPrefab, parent);
