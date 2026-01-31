@@ -3,7 +3,7 @@ using TMPro;
 
 namespace Solitaire.Cards
 {
-    public class CardView : MonoBehaviour
+    public class Card : MonoBehaviour
     {
         [SerializeField] private CardData m_Data;
         [SerializeField] private SpriteRenderer m_SymbolRenderer;

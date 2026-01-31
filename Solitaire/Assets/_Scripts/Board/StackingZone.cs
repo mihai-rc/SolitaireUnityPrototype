@@ -1,11 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Solitaire.Board
+namespace Solitaire
 {
     public class StackingZone : MonoBehaviour
     {
-        // [SerializeField] private int m_Capacity;
         [SerializeField] private Vector3 m_Spacing;
         private Vector3 m_NextPosition;
 

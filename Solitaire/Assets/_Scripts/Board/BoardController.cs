@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 using PrimeTween;
 using Solitaire.Cards;
-using Solitaire.Deck;
-using UnityEngine;
+using Unity.VisualScripting;
 
-namespace Solitaire.Board
+namespace Solitaire
 {
-    public class BoardController : IDisposable
+    public class BoardController
     {
         private const int k_Lanes = 7;
 
         private readonly GameConfig m_GameConfig;
-        private readonly BoardView m_View;
-        private readonly CardsDeckController m_Deck;
-        private readonly LinkedList<CardView> m_DeckList;
-        private readonly List<LinkedList<CardView>> m_LanesLists;
+        private readonly Board m_Board;
+        private readonly Deck m_Deck;
+        private readonly Dealer m_Dealer = new();
+        private readonly List<LinkedList<Card>> m_LanesLists = new();
 
-        public BoardController(GameConfig gameConfig, BoardView view, CardsDeckController deck)
+        public BoardController(GameConfig gameConfig, Board board, Deck deck)
         {
             m_GameConfig = gameConfig;
-            m_View = view;
+            m_Board = board;
             m_Deck = deck;
 
-            m_DeckList = new LinkedList<CardView>();
-            m_LanesLists = new List<LinkedList<CardView>>();
+            m_Deck.Init();
             foreach (var _ in m_GameConfig.CardsPerLane)
             {
-                m_LanesLists.Add(new LinkedList<CardView>());
+                m_LanesLists.Add(new LinkedList<Card>());
             }
         }
 
@@ -42,11 +40,11 @@ namespace Solitaire.Board
 
         private async ValueTask FillDeckAsync()
         {
-            await m_Deck.ForEachAsync(this, async (controller, card) =>
+            foreach (var card in m_Deck.Cards)
             {
-                controller.m_DeckList.AddLast(card);
+                m_Dealer.Add(card);
 
-                var deckSlot = m_View.DeckStack.GetNextPosition();
+                var deckSlot = m_Board.DeckZone.GetNextPosition();
                 var midpoint = (card.transform.position + deckSlot) / 2f;
                 var offset = deckSlot - midpoint;
                 var axis = card.transform.up * -1;
@@ -59,14 +57,14 @@ namespace Solitaire.Board
                 Ease.InOutQuad);
 
                 await Awaitable.WaitForSecondsAsync(0.01f);
-            });
+            }
 
             await Awaitable.WaitForSecondsAsync(0.5f);
         }
 
         private async ValueTask FillLanesAsync()
         {
-            var placed = new int[k_Lanes];
+            var placedPerLane = new int[k_Lanes];
             var done = false;
 
             do
@@ -74,28 +72,22 @@ namespace Solitaire.Board
                 done = true;
                 for (var lane = 0; lane < k_Lanes; lane++)
                 {
-                    if (placed[lane] < m_GameConfig.CardsPerLane[lane])
-                    {
-                        // Place one element in this lane
-                        placed[lane]++;
+                    if (placedPerLane[lane] >= m_GameConfig.CardsPerLane[lane]) continue;
 
-                        var card = m_DeckList.Last.Value;
-                        m_DeckList.RemoveLast();
-                        m_LanesLists[lane].AddLast(card);
+                    // Place one element in this lane
+                    placedPerLane[lane]++;
 
-                        var targetPosition = m_View.Stacks[lane].GetNextPosition();
-                        Tween.Position(card.transform, targetPosition, 0.2f);
-                        await Awaitable.WaitForSecondsAsync(0.1f);
+                    var card = m_Dealer.Deal();
+                    m_LanesLists[lane].AddLast(card);
 
-                        done = false; // At least one lane still needed work
-                    }
+                    var targetPosition = m_Board.LaneZones[lane].GetNextPosition();
+                    Tween.Position(card.transform, targetPosition, 0.2f);
+                    await Awaitable.WaitForSecondsAsync(0.1f);
+
+                    done = false; // At least one lane still needed work
                 }
-            } while (!done);
-        }
-
-        public void Dispose()
-        {
-            m_Deck?.Dispose();
+            } 
+            while (!done);
         }
     }
 }

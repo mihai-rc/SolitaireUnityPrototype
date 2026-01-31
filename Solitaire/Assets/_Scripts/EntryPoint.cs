@@ -1,29 +1,20 @@
-﻿using Solitaire.Board;
+﻿using Solitaire;
 using UnityEngine;
-using Solitaire.Deck;
 
 namespace Solitaire
 {
     public class EntryPoint : MonoBehaviour
     {
         [SerializeField] private GameConfig m_GameConfig;
-        [SerializeField] private CardsDeckView m_CardsDeckView;
-        [SerializeField] private BoardView m_BoardView;
+        [SerializeField] private Deck m_Deck;
+        [SerializeField] private Board m_Board;
 
-        private CardsDeckController m_CardsDeckController;
         private BoardController m_BoardController;
 
         private void Start()
         {
-            m_CardsDeckController = new CardsDeckController(m_CardsDeckView);
-            m_BoardController = new BoardController(m_GameConfig, m_BoardView, m_CardsDeckController);
-
+            m_BoardController = new BoardController(m_GameConfig, m_Board, m_Deck);
             m_BoardController.SetupAsync();
-        }
-
-        private void OnDestroy()
-        {
-            m_CardsDeckController.Dispose();
         }
     }
 }
