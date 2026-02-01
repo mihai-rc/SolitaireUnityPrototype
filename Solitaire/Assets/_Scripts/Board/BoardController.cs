@@ -34,7 +34,7 @@ namespace Solitaire
             await Awaitable.WaitForSecondsAsync(1f);
             foreach (var lane in m_Lanes)
             {
-                lane.ShowNextCard();
+                lane.ShowFirstHiddenCard();
                 await Awaitable.WaitForSecondsAsync(0.1f);
             }
         }
