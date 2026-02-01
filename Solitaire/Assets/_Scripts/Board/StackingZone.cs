@@ -7,10 +7,7 @@ namespace Solitaire
         [SerializeField] private Vector3 m_Spacing;
         private Vector3 m_NextPosition;
 
-        private void Awake()
-        {
-            m_NextPosition = transform.position;
-        }
+        private void Awake() => m_NextPosition = transform.position;
 
         public Vector3 GetNextPosition()
         {
@@ -19,5 +16,7 @@ namespace Solitaire
 
             return nextPosition;
         }
+
+        public void DecreasePosition() => m_NextPosition -= m_Spacing;
     }
 }

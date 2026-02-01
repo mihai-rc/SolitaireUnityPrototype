@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using PrimeTween;
-using Solitaire.Cards;
-using Unity.VisualScripting;
 
 namespace Solitaire
 {
@@ -13,53 +11,32 @@ namespace Solitaire
 
         private readonly GameConfig m_GameConfig;
         private readonly Board m_Board;
-        private readonly Deck m_Deck;
-        private readonly Dealer m_Dealer = new();
-        private readonly List<LinkedList<Card>> m_LanesLists = new();
+        private readonly Dealer m_Dealer;
+        private readonly List<Lane> m_Lanes = new();
 
         public BoardController(GameConfig gameConfig, Board board, Deck deck)
         {
             m_GameConfig = gameConfig;
             m_Board = board;
-            m_Deck = deck;
+            m_Dealer = new Dealer(deck, board.DeckZone);
 
-            m_Deck.Init();
-            foreach (var _ in m_GameConfig.CardsPerLane)
+            for (var lane = 0; lane < k_Lanes; lane++)
             {
-                m_LanesLists.Add(new LinkedList<Card>());
+                m_Lanes.Add(new Lane(m_Board.LaneZones[lane]));
             }
         }
 
         public async ValueTask SetupAsync()
         {
-            m_Deck.Shuffle();
-
-            await FillDeckAsync();
+            await m_Dealer.FillDeckAsync();
             await FillLanesAsync();
-        }
-
-        private async ValueTask FillDeckAsync()
-        {
-            foreach (var card in m_Deck.Cards)
+            
+            await Awaitable.WaitForSecondsAsync(1f);
+            foreach (var lane in m_Lanes)
             {
-                m_Dealer.Add(card);
-
-                var deckSlot = m_Board.DeckZone.GetNextPosition();
-                var midpoint = (card.transform.position + deckSlot) / 2f;
-                var offset = deckSlot - midpoint;
-                var axis = card.transform.up * -1;
-
-                Tween.Custom(0, 180, 0.2f, angle =>
-                {
-                    card.transform.position = midpoint + Quaternion.AngleAxis(180 - angle, axis) * offset;
-                    card.transform.eulerAngles = new Vector3(0f, angle, 0f);
-                },
-                Ease.InOutQuad);
-
-                await Awaitable.WaitForSecondsAsync(0.01f);
+                lane.ShowNextCard();
+                await Awaitable.WaitForSecondsAsync(0.1f);
             }
-
-            await Awaitable.WaitForSecondsAsync(0.5f);
         }
 
         private async ValueTask FillLanesAsync()
@@ -78,9 +55,8 @@ namespace Solitaire
                     placedPerLane[lane]++;
 
                     var card = m_Dealer.Deal();
-                    m_LanesLists[lane].AddLast(card);
+                    var targetPosition = m_Lanes[lane].AddHiddenCard(card);
 
-                    var targetPosition = m_Board.LaneZones[lane].GetNextPosition();
                     Tween.Position(card.transform, targetPosition, 0.2f);
                     await Awaitable.WaitForSecondsAsync(0.1f);
 

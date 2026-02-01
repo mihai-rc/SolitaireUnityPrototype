@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea598feebc24385a83f031c390f90d8, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::Solitaire.GameConfig
-  <CardsPerLane>k__BackingField: 01000000020000000300000004000000000000000600000007000000
+  <CardsPerLane>k__BackingField: 01000000020000000300000004000000050000000600000007000000

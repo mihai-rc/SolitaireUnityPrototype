@@ -1,5 +1,4 @@
-﻿using Solitaire;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Solitaire
 {
@@ -9,6 +8,7 @@ namespace Solitaire
         [SerializeField] private Deck m_Deck;
         [SerializeField] private Board m_Board;
 
+        private Dealer m_Dealer;
         private BoardController m_BoardController;
 
         private void Start()
